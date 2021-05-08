@@ -52,5 +52,5 @@ jobs:
       with:
         app-name: 'westleysapp'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_ac175df28d1144ccafe352182b2f17a1 }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_xxxxx }}
         package: .
