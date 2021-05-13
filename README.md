@@ -1,5 +1,9 @@
 An app for learning azure
+Create Resource Group
 
+Create App Service Plan
+
+Create web app
 ```
 az webapp up \
 --name westleysapp
