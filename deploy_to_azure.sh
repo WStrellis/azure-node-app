@@ -49,13 +49,3 @@ az webapp create \
 if [ $? -gt 0 ]; then 
     exit 1
 fi
-
-# Start web app
-echo "Starting web app"
-az webapp start \
---name $APP_NAME \
- --resource-group $RESOURCE_GROUP \
- --slot production 
-if [ $? -gt 0 ]; then 
-    exit 1
-fi
