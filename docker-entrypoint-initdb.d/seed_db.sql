@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS node_app;
+
 USE node_app;
 
 CREATE TABLE IF NOT EXISTS shopping_list (
