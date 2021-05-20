@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ $# -lt 2 ]; then
-    echo "Need app name and github url"
+if [ $# -lt 3 ]; then
+    echo "Need app name , github url, and workstation ip"
     exit 1
 fi
 
@@ -10,6 +10,7 @@ RESOURCE_GROUP="$APP_NAME-rg"
 APP_SERVICE_PLAN="$APP_NAME-asp"
 DEPLOYMENT_URL=$2
 DB_NAME="$APP_NAME-db"
+MY_IP=$3
 
 echo "App name is: $APP_NAME"
 echo "RESOURCE_GROUP is $RESOURCE_GROUP"
@@ -27,19 +28,30 @@ if [ $? -gt 0 ]; then
 fi
 
 # create database
-az mysql server create \
+az postgres server create \
 --resource-group $RESOURCE_GROUP \
 --name $DB_NAME \
 --location eastus \
 --admin-user $DB_USER \
 --admin-password $DB_PASSWORD \
 --sku-name B_Gen5_1 \
---version 8.0
+--ssl-enforcement Disabled \
+--public-network-access Disabled \
+--version 11 
 if [ $? -gt 0 ]; then 
      exit 1
 fi
-# get host and port from db
 
+# add firewall rule to allow access from workstation
+az postgres server firewall-rule create \
+--resource-group $RESOURCE_GROUP \
+--server $DB_NAME\
+--name AllowMyIP \
+--start-ip-address $MY_IP \
+--end-ip-address $MY_IP
+if [ $? -gt 0 ]; then 
+     exit 1
+fi
 # Create App Service Plan
 echo "Creating app service plan: $APP_SERVICE_PLAN"
 az appservice plan create \
@@ -66,49 +78,30 @@ if [ $? -gt 0 ]; then
     exit 1
 fi
 
+# get ip of web app
+WEBAPP_IP=$()
+
+# add firewall rule to allow access to db from web app
+az postgres server firewall-rule create \
+--resource-group $RESOURCE_GROUP \
+--server $DB_NAME\
+--name AllowWebApp \
+--start-ip-address $WEBAPP_IP \
+--end-ip-address $WEBAPP_IP
+if [ $? -gt 0 ]; then 
+     exit 1
+fi
+
 # Set environment variables for web app
-
-# host
 az webapp config appsettings set \
 --name $APP_NAME \
 --resource-group $RESOURCE_GROUP \
---settings MYSQL_HOST=""
-if [ $? -gt 0 ]; then 
-    exit 1
-fi
-
-# port
-az webapp config appsettings set \
---name $APP_NAME \
---resource-group $RESOURCE_GROUP \
---settings MYSQL_PORT=$DB_PORT
-if [ $? -gt 0 ]; then 
-    exit 1
-fi
-
-# user
-az webapp config appsettings set \
---name $APP_NAME \
---resource-group $RESOURCE_GROUP \
---settings MYSQL_USER=$DB_USER
-if [ $? -gt 0 ]; then 
-    exit 1
-fi
-
-# password
-az webapp config appsettings set \
---name $APP_NAME \
---resource-group $RESOURCE_GROUP \
---settings MYSQL_PASSWORD=$DB_PASSWORD
-if [ $? -gt 0 ]; then 
-    exit 1
-fi
-
-# database
-az webapp config appsettings set \
---name $APP_NAME \
---resource-group $RESOURCE_GROUP \
---settings MYSQL_DB=node_app
+--settings \
+PG_HOST=$PG_HOST \
+PG_PORT=$PG_PORT \
+PG_USER=$PG_USER \
+PG_PASSWORD=$PG_PASSWORD \
+PG_DB=$PG_DB
 if [ $? -gt 0 ]; then 
     exit 1
 fi

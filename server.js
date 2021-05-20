@@ -1,28 +1,29 @@
 const express = require('express')
-const mysql = require('mysql2/promise')
+const pg = require('pg')
 require('dotenv').config()
 
 const server = express()
 
 // server.use('/api',express.json())
 
-var mysqlConfig =
+var pgConfig =
 {
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DB,
-    port: process.env.MYSQL_PORT || 3306
+    host: process.env.PG_HOST,
+    user: process.env.PG_USER,
+    password: process.env.PG_PASSWORD,
+    database: process.env.PG_DB,
+    port: Number(process.env.PG_PORT) || 5432
 };
 
-// console.log(mysqlConfig)
+// console.log(pgConfig)
 
 
 
 async function useDB(cb) {
-    const mysqlConn = await mysql.createConnection(mysqlConfig)
-    const [rows] = await cb(mysqlConn)
-    await mysqlConn.end()
+    const pgClient = new pg.Client(pgConfig)
+    pgClient.connect()
+    const {rows} = await cb(pgClient)
+    await pgClient.end()
     return rows
 }// end useDB
 
@@ -34,8 +35,8 @@ let port = Number(process.env.PORT) || 3030
 
 server.get("/api/shopping", async (req,res) => {
     try {
-       result = await useDB(readData) 
-       res.status(200).json(result)
+       rows= await useDB(readData) 
+       res.status(200).json(rows)
     } catch (error) {
        console.error(error)
        res.status(400).json({error:"An error occured"})  

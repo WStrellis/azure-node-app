@@ -12,6 +12,6 @@
   "dependencies": {
     "dotenv": "^9.0.2",
     "express": "^4.17.1",
-    "mysql2": "^2.2.5"
+    "pg": "^8.6.0"
   }
 }
