@@ -27,17 +27,19 @@ if [ $? -gt 0 ]; then
      exit 1
 fi
 
+
 # create database
 az postgres server create \
 --resource-group $RESOURCE_GROUP \
 --name $DB_NAME \
 --location eastus \
---admin-user $DB_USER \
---admin-password $DB_PASSWORD \
+--admin-user $PG_USER \
+--admin-password $PG_PASSWORD \
 --sku-name B_Gen5_1 \
---ssl-enforcement Disabled \
---public-network-access Disabled \
 --version 11 
+
+# --ssl-enforcement Disabled \
+# --public-network-access Disabled \
 if [ $? -gt 0 ]; then 
      exit 1
 fi
@@ -45,7 +47,7 @@ fi
 # add firewall rule to allow access from workstation
 az postgres server firewall-rule create \
 --resource-group $RESOURCE_GROUP \
---server $DB_NAME\
+--server $DB_NAME \
 --name AllowMyIP \
 --start-ip-address $MY_IP \
 --end-ip-address $MY_IP
