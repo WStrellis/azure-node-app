@@ -2,3 +2,4 @@ node_modules
 .azure
 scratchpad.txt
 .env*
+app
