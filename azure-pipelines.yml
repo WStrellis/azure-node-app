@@ -29,9 +29,9 @@ steps:
 - script: |
     pwd
     npm ci
-    BUILD_PATH="$(Pipeline.Workspace)" npm run build
+    BUILD_PATH="$(System.DefaultWorkingDirectory)" npm run build
   displayName: 'Install and build web app'
-  workingDirectory: "$(Pipeline.Workspace)/front_end"
+  workingDirectory: "$(System.DefaultWorkingDirectory)/front_end"
 
 - script: |
     pwd
@@ -41,6 +41,6 @@ steps:
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Pipeline.Workspace)'
+    PathtoPublish: '$(System.DefaultWorkingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
