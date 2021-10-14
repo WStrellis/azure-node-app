@@ -39,7 +39,6 @@ steps:
   displayName: Cache web npm
 
 - script: |
-    pwd
     npm --cache "$(web_npm_cache)" ci
     BUILD_PATH="$(Build.ArtifactStagingDirectory)/web" npm run build
   displayName: 'Install and build web app'
@@ -53,10 +52,7 @@ steps:
     path: $(server_npm_cache)
   displayName: Cache server npm
 
-- script: |
-    pwd
-    ls
-    npm --cache "$(server_npm_cache)" ci
+- script: npm --cache "$(server_npm_cache)" ci
   displayName: 'Install server dependencies'
 
 - task: CopyFiles@2
