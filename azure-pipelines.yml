@@ -68,7 +68,9 @@ steps:
 - task: CopyFiles@2
   inputs:
     SourceFolder: '$(System.DefaultWorkingDirectory)'
-    contents: server.js
+    contents: 
+      server.js
+      package.json
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
 
