@@ -29,7 +29,7 @@ steps:
 - script: |
     pwd
     npm ci
-    BUILD_PATH="$(System.DefaultWorkingDirectory)/web" npm run build
+    BUILD_PATH="$(Build.ArtifactStagingDirectory)/web" npm run build
   displayName: 'Install and build web app'
   workingDirectory: "$(System.DefaultWorkingDirectory)/front_end"
 
@@ -39,8 +39,20 @@ steps:
     npm ci
   displayName: 'Install server dependencies'
 
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)'
+    contents: node_modules
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)'
+    contents: server.js
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(System.DefaultWorkingDirectory)'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
