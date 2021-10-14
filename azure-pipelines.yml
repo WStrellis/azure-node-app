@@ -15,8 +15,16 @@ steps:
     versionSpec: '14.x'
   displayName: 'Install Node.js'
 
-- script: ls
-  displayName: 'show directory contents'
+- script: |
+    echo "current directory: $(pwd)"
+    ls
+    echo "Pipeline.Workspace = $(Pipeline.Workspace)"
+    echo "System.DefaultWorkingDirectory = $(System.DefaultWorkingDirectory)"
+    echo "Build.ArtifactStagingDirectory = $(Build.ArtifactStagingDirectory)"
+    echo "Build.StagingDirectory = $(Build.StagingDirectory)"
+    echo "Build.Repository.LocalPath = $(Build.Repository.LocalPath)"
+    echo "Build.SourcesDirectory = $(Build.SourcesDirectory)"
+  displayName: 'show variables and directory contents'
 
 - script: |
     pwd
