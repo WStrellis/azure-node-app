@@ -12,6 +12,7 @@ pool:
 variables:
   server_npm_cache: "$(Pipeline.Workspace)/.servernpm"
   web_npm_cache: "$(Pipeline.Workspace)/.webnpm"
+  archiveName: "app-$(Build.BuildId).zip"
 
 steps:
 - task: NodeTool@0
@@ -67,8 +68,14 @@ steps:
     contents: server.js
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-- task: PublishBuildArtifacts@1
+- task: ArchiveFiles@2
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+    includeRootFolder: false
+    archiveType: zip
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(archiveName)'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/$(archiveName)'
+    artifactType: pipeline
