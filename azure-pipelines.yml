@@ -65,9 +65,7 @@ steps:
 - task: CopyFiles@2
   inputs:
     SourceFolder: '$(System.DefaultWorkingDirectory)'
-    contents: 
-      server.js
-      package.json
+    contents: (server.js|package.json)
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
 
@@ -79,6 +77,7 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(archiveName)'
 
 - script: ls '$(Build.ArtifactStagingDirectory)'
+  displayName: 'View artifacts'
 
 - task: PublishPipelineArtifact@1
   inputs:
