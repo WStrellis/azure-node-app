@@ -29,7 +29,7 @@ steps:
 - script: |
     pwd
     npm ci
-    BUILD_PATH="$(System.DefaultWorkingDirectory)" npm run build
+    BUILD_PATH="$(System.DefaultWorkingDirectory)/web" npm run build
   displayName: 'Install and build web app'
   workingDirectory: "$(System.DefaultWorkingDirectory)/front_end"
 
