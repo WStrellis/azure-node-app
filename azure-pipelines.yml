@@ -15,14 +15,22 @@ steps:
     versionSpec: '14.x'
   displayName: 'Install Node.js'
 
+- script: ls
+  displayName: 'show directory contents'
+
 - script: |
+    pwd
     npm ci
     BUILD_PATH="$(Pipeline.Workspace)" npm run build
   displayName: 'Install and build web app'
-  workingDirectory: $(Pipeline.Workspace)/
+  workingDirectory: "$(Pipeline.Workspace)/front_end"
 
-- script: npm ci
+- script: |
+    pwd
+    ls
+    npm ci
   displayName: 'Install server dependencies'
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Pipeline.Workspace)'
