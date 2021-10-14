@@ -9,6 +9,10 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  server_npm_cache: "$(Pipeline.Workspace)/.servernpm"
+  web_npm_cache: "$(Pipeline.Workspace)/.webnpm"
+
 steps:
 - task: NodeTool@0
   inputs:
@@ -26,17 +30,33 @@ steps:
     echo "Build.SourcesDirectory = $(Build.SourcesDirectory)"
   displayName: 'show variables and directory contents'
 
+- task: Cache@2
+  inputs:
+    key: 'webnpm | "$(Agent.OS)" | package-lock.json'
+    restoreKeys: |
+       npm | "$(Agent.OS)"
+    path: $(web_npm_cache)
+  displayName: Cache web npm
+
 - script: |
     pwd
-    npm ci
+    npm --cache "$(web_npm_cache)" ci
     BUILD_PATH="$(Build.ArtifactStagingDirectory)/web" npm run build
   displayName: 'Install and build web app'
   workingDirectory: "$(System.DefaultWorkingDirectory)/front_end"
 
+- task: Cache@2
+  inputs:
+    key: 'servernpm | "$(Agent.OS)" | package-lock.json'
+    restoreKeys: |
+       npm | "$(Agent.OS)"
+    path: $(server_npm_cache)
+  displayName: Cache server npm
+
 - script: |
     pwd
     ls
-    npm ci
+    npm --cache "$(server_npm_cache)" ci
   displayName: 'Install server dependencies'
 
 - task: CopyFiles@2
