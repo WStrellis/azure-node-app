@@ -62,10 +62,13 @@ steps:
     contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/node_modules'
 
+- script: ls
+  displayName: "why cant it find things"
+
 - task: CopyFiles@2
   inputs:
     SourceFolder: '$(System.DefaultWorkingDirectory)'
-    contents: (server.js|package.json)
+    contents: server.js
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
 
