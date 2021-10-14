@@ -65,13 +65,16 @@ steps:
 - script: ls
   displayName: "why cant it find things"
 
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '$(System.DefaultWorkingDirectory)'
-    contents: 
-      server.js
-      package.json
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+# - task: CopyFiles@2
+#   inputs:
+#     SourceFolder: '$(System.DefaultWorkingDirectory)'
+#     contents: 
+#       server.js
+#       package.json
+#     TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- script: cp '$(System.DefaultWorkingDirectory)/{server.js,package.json}' '$(Build.ArtifactStagingDirectory)'
+  displayName: "Copy server files"
 
 
 - task: ArchiveFiles@2
