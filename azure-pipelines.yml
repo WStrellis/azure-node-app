@@ -41,8 +41,8 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(System.DefaultWorkingDirectory)'
-    contents: node_modules/**
+    SourceFolder: '$(System.DefaultWorkingDirectory)/node_modules'
+    contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/node_modules'
 
 - task: CopyFiles@2
