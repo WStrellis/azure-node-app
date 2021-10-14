@@ -65,8 +65,11 @@ steps:
 - task: CopyFiles@2
   inputs:
     SourceFolder: '$(System.DefaultWorkingDirectory)'
-    contents: server.js
+    contents: 
+      server.js
+      package.json
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
 
 - task: ArchiveFiles@2
   inputs:
@@ -74,6 +77,8 @@ steps:
     includeRootFolder: false
     archiveType: zip
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(archiveName)'
+
+- script: ls '$(Build.ArtifactStagingDirectory)'
 
 - task: PublishPipelineArtifact@1
   inputs:
