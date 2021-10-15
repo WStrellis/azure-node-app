@@ -67,17 +67,18 @@ steps:
     contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/node_modules'
 
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '$(System.DefaultWorkingDirectory)'
-    contents: server.js
-      package.json
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+# can't figure out how to make it work for multi line patterns
+# - task: CopyFiles@2
+#   inputs:
+#     SourceFolder: '$(System.DefaultWorkingDirectory)'
+#     contents: server.js
+#       package.json
+#     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-# - script: |
-#     cp "$(System.DefaultWorkingDirectory)/server.js" '$(Build.ArtifactStagingDirectory)'
-#     cp "$(System.DefaultWorkingDirectory)/package.json" '$(Build.ArtifactStagingDirectory)'
-#   displayName: "Copy server files"
+- script: |
+    cp "$(System.DefaultWorkingDirectory)/server.js" '$(Build.ArtifactStagingDirectory)'
+    cp "$(System.DefaultWorkingDirectory)/package.json" '$(Build.ArtifactStagingDirectory)'
+  displayName: "Copy server files"
 
 
 - task: ArchiveFiles@2
