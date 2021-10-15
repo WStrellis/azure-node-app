@@ -1,3 +1,4 @@
+
 const express = require('express')
 const pg = require('pg')
 require('dotenv').config()
@@ -16,8 +17,6 @@ var pgConfig =
 };
 
 // console.log(pgConfig)
-
-
 
 async function useDB(cb) {
     const pgClient = new pg.Client(pgConfig)
